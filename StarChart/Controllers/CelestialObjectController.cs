@@ -22,7 +22,7 @@ namespace StarChart.Controllers
         {
             var celestialObject = _context.CelestialObjects.Find(id);
             if (celestialObject == null)
-                return NotFound(id);
+                return NotFound();
             else
             {
                 celestialObject.Satellites = _context.CelestialObjects.
@@ -36,7 +36,7 @@ namespace StarChart.Controllers
         {
             var celestialObject = _context.CelestialObjects.SingleOrDefault(c=> c.Name == name);
             if (celestialObject == null)
-                return NotFound(name);
+                return NotFound();
             else
             {
                 celestialObject.Satellites = _context.CelestialObjects.
