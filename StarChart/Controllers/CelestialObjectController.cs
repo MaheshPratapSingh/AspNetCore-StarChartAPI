@@ -17,21 +17,21 @@ namespace StarChart.Controllers
             _context = context;
         }
 
-        [HttpGet(Name = "GetById")]
-        public IActionResult GetById(int Id)
+        [HttpGet("{id:int}",Name = "GetById")]
+        public IActionResult GetById(int id)
         {
-            var celestialObject = _context.CelestialObjects.Find(Id);
+            var celestialObject = _context.CelestialObjects.Find(id);
             if (celestialObject == null)
-                return NotFound(Id);
+                return NotFound(id);
             else
             {
                 celestialObject.Satellites = _context.CelestialObjects.
-                    Where(c => c.OrbitedObjectId == Id).ToList();
+                    Where(c => c.OrbitedObjectId == id).ToList();
                 return Ok(celestialObject);
             }
         }
 
-        [HttpGet(Name = "GetByName")]
+        [HttpGet("{name}",Name = "GetByName")]
         public IActionResult GetByName(string name)
         {
             var celestialObject = _context.CelestialObjects.Find(name);
@@ -48,13 +48,18 @@ namespace StarChart.Controllers
         [HttpGet(Name = "GetAll")]
         public IActionResult GetAll()
         {
-            var celestialObjects = _context.CelestialObjects;
-            foreach (var celestialObject in celestialObjects)
+            var celestialObjects = _context.CelestialObjects.ToList();
+            if (!celestialObjects.Any())
+                return NotFound();
+            else
             {
-                celestialObject.Satellites = celestialObjects.
-                    Where(c => c.OrbitedObjectId == celestialObject.Id).ToList();
+                foreach (var celestialObject in celestialObjects)
+                {
+                    celestialObject.Satellites = celestialObjects.
+                        Where(c => c.OrbitedObjectId == celestialObject.Id).ToList();
+                }
+                return Ok(celestialObjects);
             }
-            return Ok(celestialObjects);
         }
     }
 }
