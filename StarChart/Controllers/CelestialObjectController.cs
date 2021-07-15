@@ -10,7 +10,7 @@ namespace StarChart.Controllers
 {
     [ApiController]
     [Route("")]
-    public class CelestialObjectController : Controller
+    public class CelestialObjectController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
         public CelestialObjectController(ApplicationDbContext context)
@@ -67,11 +67,11 @@ namespace StarChart.Controllers
         }
         
         [HttpPost]
-        public IActionResult Create(CelestialObject celestialObject)
+        public IActionResult Create([FromBody]CelestialObject celestialObject)
         {
             _context.CelestialObjects.Add(celestialObject);
             _context.SaveChanges();
-            return CreatedAtRoute("GetById", new { celestialObject.Id });
+            return CreatedAtRoute("GetById", new { celestialObject.Id }, celestialObject);
         }
 
         [HttpPut("{id}")]
